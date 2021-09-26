@@ -1,27 +1,30 @@
 import Node from './model.js'
 
 function parse(file, callback) {
+    if (!file) return;
     let start = performance.now();
-    let root = new Node("apk");
-    if (!file) file = "static/_douyin";
+    let root = new Node();
     d3.text(file).then(function(dataset) {
-        let list = d3.csvParseRows(dataset, (d, i) =>
-            // { return null; });
-            { return parseLine(d); });
+        let list = d3.csvParseRows(dataset, (d, i) => { return parseLine(d); });
         list.shift();
-        for (const item of list) { // not for(cost item in list)
-            if (item.fRawPrivateCount === 0 && item.mRawPrivateCount === 0) {
-                continue;
-            }
-
-            if (item.clazz.indexOf("R") != -1) {
-                continue;
-            }
+        for (const item of list) {
+            if (filter(item)) continue;
             root.build(item);
         }
         console.log("cost is", `${performance.now() - start}ms`);
         callback(root);
     });
+}
+
+function filter(item) {
+    if (item.fRawPrivateCount === 0 && item.mRawPrivateCount === 0) {
+        return true;
+    }
+
+    if (item.clazz.indexOf("/R") != -1) {
+        return true;
+    }
+    return false;
 }
 
 function parseLine(d) {

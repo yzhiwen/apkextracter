@@ -13,8 +13,9 @@ class ConfusionBar {
 
         this.svg = d3.select("#my_dataviz")
             .style("display", "flex")
+            .style("flex-direction", "column")
             .style("justify-content", "center")
-            // .style("align-items", "center")
+            .style("align-items", "center")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
