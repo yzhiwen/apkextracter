@@ -18,25 +18,3 @@ function onBuildBar(root) {
     let list = root.children.sort((a, b) => b.value - a.value)
     bar.build(list);
 }
-
-let list = ["a", "b", "c"]
-d3.select(".sidebar")
-    .append("div")
-    .style("display", "flex")
-    .style("flex-direction", "column")
-    .style("align-items", "center")
-    .style("justify-content", "center")
-    .selectAll("div")
-    .data(list)
-    .enter()
-    .append("div")
-    .style("width", "100%")
-    .style("align", "center")
-    .on("click", function(event, item) { onSideItemClick(item); })
-    .append("p")
-    .text(d => d)
-
-
-function onSideItemClick(item) {
-    console.log(item);
-}
