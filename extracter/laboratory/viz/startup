@@ -1,0 +1,9 @@
+#!/bin/bash
+
+which livereload || pip3 install livereload
+[ $? != 0 ] && echo "not found livereload" && exit 2
+
+which parcel || npm install -g parcel-bundler
+[ $? != 0 ] && echo "not found parcel" && exit 2
+
+python3 startup.py
