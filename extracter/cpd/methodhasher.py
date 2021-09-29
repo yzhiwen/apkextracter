@@ -1,13 +1,24 @@
+from .factory import ClazzMethodFactory
 from .factory import ClazzMethodTokenFactory
 from .factory import SnippetMethodFactory
 
 class MethodHasher:
 
     @staticmethod
+    def startup(minitokens):
+        """hash all method"""
+        methods = ClazzMethodFactory.CLAZZMETHODMAP
+        for method in methods:
+            MethodHasher.methodhash(method, minitokens)
+        pass
+
+    @staticmethod
     def methodhash(method, minitokens:int):
-        methodHashMap = {} # <int`sub method tokens`, hashset`sub method tokens hash`>
         tokens = method.tokens
         n = len(tokens)
+        m = minitokens # m:`patten length`
+        if(m > n): return
+        
         r = ClazzMethodTokenFactory.R()
         q = ClazzMethodTokenFactory.Q()
         valueof = ClazzMethodTokenFactory.valueof
@@ -15,24 +26,17 @@ class MethodHasher:
         def onSnippetHash(start, len, hash):
             SnippetMethodFactory.snippetMethod(method, start, len, hash)
 
-        m = minitokens # m:`patten length`
-        if(m > n): return methodHashMap
         rm = ClazzMethodTokenFactory.RM(r, m, q)
-        rkhashset = MethodHasher.rkhash(tokens, m, n, r, rm, q, valueof, onSnippetHash) # O(n) time
-        methodHashMap[m] = rkhashset
-        return methodHashMap
+        MethodHasher.rkhash(tokens, m, n, r, rm, q, valueof, onSnippetHash) # O(n) time
     
     @staticmethod
     def rkhash(tokens, m, n, R, RM, Q, valueof, onSnippetHash):
         assert m <= n
         assert callable(valueof)
         
-        rkhashset = set()
-
         hash = 0
         for i in range(m):
             hash = (hash * R + valueof(tokens[i])) % Q
-        rkhashset.add(hash)
         if callable(onSnippetHash): 
             onSnippetHash(0, m, hash)
 
@@ -46,8 +50,7 @@ class MethodHasher:
             # add trailing digit
             hash = (hash*R + trailing) % Q
 
-            rkhashset.add(hash)
             if callable(onSnippetHash):
                 onSnippetHash(i+1, m, hash)
-        return rkhashset
+        pass
     pass

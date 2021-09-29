@@ -1,6 +1,6 @@
 import time
 from .smaliwalker import SmalierWalker
-from .methodwalker import MethodWalker
+from .methodhasher import MethodHasher
 from .hashwalker import HashWaler
 from .factory import ClazzFactory, ClazzMethodFactory
 
@@ -12,8 +12,7 @@ class Cpder:
         smalierWalkerTime = time.time() - start
 
         start = time.time()
-        methodWalker = MethodWalker()
-        methodWalker.startup(minitokens=70)
+        MethodHasher.startup(minitokens=70)
         methodWalkerTime = time.time() - start
 
         start = time.time()
@@ -21,10 +20,10 @@ class Cpder:
         hashWalker.startup()
         hashWalkerTime = time.time() - start
 
-        print("total class: ", str(ClazzFactory.clazzCount()))
-        print("total method: ", str(ClazzMethodFactory.methodCount()))
-        print("smalier walker time: ", str(smalierWalkerTime))
-        print("method walker time: ", str(methodWalkerTime))
+        print("class total: ", str(ClazzFactory.clazzCount()))
+        print("method total: ", str(ClazzMethodFactory.methodCount()))
+        print("smali file walker time: ", str(smalierWalkerTime))
+        print("method hash time: ", str(methodWalkerTime))
         print("hash walker time: ", str(hashWalkerTime))
         pass
     pass

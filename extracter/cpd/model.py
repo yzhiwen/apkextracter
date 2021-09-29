@@ -13,7 +13,6 @@ class ClazzMethod:
         self.clazz.addMethod(self)
         self.methodstr = methodstr
         self.tokens = methodstr.split(" ")
-        self.methodhash = None
     pass
 
 class SnippetMethod:
