@@ -1,6 +1,6 @@
 from .factory import SnippetMethodFactory
 
-class HashWaler:
+class SnippetWaler:
 
     def startup(self):
         SnippetMethodFactory.inflateAllSnippet()

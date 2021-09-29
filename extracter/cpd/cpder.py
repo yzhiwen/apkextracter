@@ -1,7 +1,7 @@
 import time
 from .smaliwalker import SmalierWalker
 from .methodhasher import MethodHasher
-from .hashwalker import HashWaler
+from .snippetwalker import SnippetWaler
 from .factory import ClazzFactory, ClazzMethodFactory
 
 class Cpder:
@@ -16,7 +16,7 @@ class Cpder:
         methodWalkerTime = time.time() - start
 
         start = time.time()
-        hashWalker = HashWaler()
+        hashWalker = SnippetWaler()
         hashWalker.startup()
         hashWalkerTime = time.time() - start
 
