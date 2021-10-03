@@ -8,4 +8,8 @@ dex2jar/
 
 extracter/laboratory/viz/dist
 extracter/laboratory/viz/.cache
-extracter/laboratory/pmd
+pmd/
+smali/
+
+extracter/rker.py
+extracter/*.md
