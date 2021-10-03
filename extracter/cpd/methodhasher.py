@@ -21,12 +21,12 @@ class MethodHasher:
         
         r = ClazzMethodTokenFactory.R()
         q = ClazzMethodTokenFactory.Q()
+        rm = ClazzMethodTokenFactory.RM(r, m, q)
         valueof = ClazzMethodTokenFactory.valueof
 
         def onSnippetHash(start, len, hash):
             SnippetMethodFactory.snippetMethod(method, start, len, hash)
 
-        rm = ClazzMethodTokenFactory.RM(r, m, q)
         MethodHasher.rkhash(tokens, m, n, r, rm, q, valueof, onSnippetHash) # O(n) time
     
     @staticmethod
