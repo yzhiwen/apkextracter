@@ -8,11 +8,11 @@ class Clazz:
     pass
 
 class ClazzMethod:
-    def __init__(self, clazz: Clazz, methodstr:str):
+    def __init__(self, clazz: Clazz, label:str, tokens:list):
         self.clazz = clazz
         self.clazz.addMethod(self)
-        self.methodstr = methodstr
-        self.tokens = methodstr.split(" ")
+        self.label = label
+        self.tokens = tokens
     pass
 
 class SnippetMethod:

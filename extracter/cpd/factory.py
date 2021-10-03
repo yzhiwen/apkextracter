@@ -23,9 +23,9 @@ class ClazzMethodFactory:
     CLAZZMETHODMAP = []
 
     @staticmethod
-    def clazzMethod(file, methodstr):
+    def clazzMethod(file, label, tokens):
         clazz = ClazzFactory.clazz(file)
-        clazzMethod = ClazzMethod(clazz, methodstr)
+        clazzMethod = ClazzMethod(clazz, label, tokens)
         ClazzMethodFactory.onMethodCreated(clazzMethod)
         return clazzMethod
     
