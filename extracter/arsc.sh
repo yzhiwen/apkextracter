@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# request: aapt2 apktool
+which aapt2 || exit 2
+# which apktool || exit 2
 
 function parseResInArsc() {
     awk '$0 ~ /^    resource/ { print $2 }' arsc/arscdump
@@ -67,49 +68,15 @@ function groupUnusedRes() {
 
 function HELP() {
 cat <<EOF
-Usage: 
-    $(basename "$0") [options] file
-
-file:
-    apk
-
-options:
-    -u --useless            print useless R field in code and xml
+Usage: $(basename "$0") [options] apk
 EOF
 }
 
-options=$(getopt -u -o uh -l useless,help -- $@)
-if [ $? != 0 ]; then
-    exit 2;
-fi
-set -- $options
-
-while true; do
-    case $1 in
-        -u|--useless)
-            USELESS="true";;
-        -h|--help)
-            HELP && exit 0;;
-        *)
-            break;;
-    esac
-    shift
-done
-
-shift && [ $# == 0 ] && echo "missing file..." && exit 2
-EXTRACT_FILE=`realpath $1`
-EXTRACT_DIR=""
-if [[ -f $EXTRACT_FILE ]]; then
-    EXTRACT_DIR="__`basename $EXTRACT_FILE`"
-    rm -rf $EXTRACT_DIR
-    bin/apk/apktool d -o $EXTRACT_DIR $EXTRACT_FILE
-else
-    echo "input file invalid $1"
-    exit 2
-fi
-
-[ -z $EXTRACT_DIR ] && HELP && exit 2
+. common && apkdecode $1
+[ ! -f $EXTRACT_FILE ] && HELP && exit 2
+[ ! -d $EXTRACT_DIR ] && HELP && exit 2
 
 [ ! -d arsc ] && mkdir arsc
 
-[ $USELESS ] $$ echo "Decoding unsless r on $EXTRACT_FILE..." && uselessr
+# print useless R field in code and xml
+echo "extract resource less value ..." && uselessr

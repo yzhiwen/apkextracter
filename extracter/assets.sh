@@ -34,47 +34,12 @@ function uselessAssetFile() {
 
 function HELP() {
 cat <<EOF
-Usage: 
-    $(basename "$0") [options] file
-
-file:
-    apk/dir
-
-options:
-    -u --useless            print unused asset directory file in code directly 
+Usage: $(basename "$0") [options] apk
 EOF
 }
 
-options=$(getopt -u -o uh -l useless,help -- $@)
-if [ $? != 0 ]; then
-    exit 2;
-fi
-set -- $options
-
-while true; do
-    case $1 in
-        -u|--useless)
-            USELESS="true";;
-        -h|--help)
-            HELP && exit 0;;
-        *)
-            break;;
-    esac
-    shift
-done
-
-shift && [ $# == 0 ] && echo "missing file..." && exit 2
-EXTRACT_DIR=`realpath $1`
-if [[ -f $EXTRACT_DIR ]]; then
-    tempdir="__`basename $EXTRACT_FILE`"
-    rm -rf $tempdir
-    unzip $EXTRACT_FILE -d $tempdir
-    EXTRACT_DIR=$tempdir
-elif [ -d $EXTRACT_DIR ]; then
-    EXTRACT_DIR=$1
-else
-    echo "input file invalid $1"
-    exit 2
-fi
-
-[ $USELESS ] && uselessAssetFile
+# the dir need apk/assets and smali, now decode by apktool
+. common && apkdecode $1
+[ $? != 0 ] && HELP && exit 2
+[ ! -d $EXTRACT_DIR ] &&  HELP && exit 2
+echo "extract assetless file ..." && uselessAssetFile

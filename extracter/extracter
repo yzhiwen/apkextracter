@@ -1,0 +1,43 @@
+#!/bin/bash
+
+function HELP() {
+cat <<EOF
+Usage: $(basename "$0") [options] apk
+
+options:
+    assetless              print unused asset file in apk directly
+    rless                  print unused resource id in apk directly (need appt2 command)
+    apkdiff                print diff two apk file
+    cpd                    print apk copy instruction
+    confusion              print apk confusion info
+
+EOF
+}
+
+function warn() {
+    [[ -n $1 ]] && echo $1
+    exit 2
+}
+
+case $1 in
+    assetless)
+        shift && [ $# == 0 ] && warn "missing apk ..."
+        . assets.sh $@ ;;
+    rless)
+        shift && [ $# == 0 ] && warn "missing apk ..."
+        . arsc.sh $@ ;;
+    apkdiff)
+        shift && [ $# -lt 2 ] && warn "need two apk ..."
+        . apkdiff.sh $@ ;;
+    cpd)
+        shift && [ $# == 0 ] && warn "missing apk ..."
+        . common && apkdecode $1
+        [ ! -d $EXTRACT_DIR ] && warn "decode error ..."
+        python3 cpd.py $@ $EXTRACT_DIR
+        ;;
+    confusion)
+        
+        ;;
+    *)
+        HELP ;;
+esac

@@ -66,10 +66,7 @@ function startup() {
 function HELP() {
 cat <<EOF
 Usage: 
-    $(basename "$0") [options] file
-
-file:
-    apk/dir
+    $(basename "$0") [options] apk
 
 options:
     --viz            print viz 
@@ -77,9 +74,7 @@ EOF
 }
 
 options=$(getopt -u -o h -l viz,help -- $@)
-if [ $? != 0 ]; then
-    exit 2;
-fi
+[ $? != 0 ] && echo "getopt error ..." && exit 2
 set -- $options
 
 while true; do
@@ -95,23 +90,8 @@ while true; do
 done
 
 shift && [ $# == 0 ] && echo "missing file..." && exit 2
-EXTRACT_FILE=`realpath $1`
-EXTRACT_DIR=""
-if [[ -f $EXTRACT_FILE ]]; then
-    EXTRACT_DIR="__`basename $EXTRACT_FILE`"
-    rm -rf $EXTRACT_DIR
-    bin/apk/apktool d -o $EXTRACT_DIR $EXTRACT_FILE
-elif [ -d $EXTRACT_DIR ]; then
-    EXTRACT_DIR=$1
-else
-    echo "input file invalid $1"
-    exit 2
-fi
+. common && apkdecode $1
+[ $? != 0 ] && HELP && exit 2
+[ ! -d $EXTRACT_DIR ] &&  HELP && exit 2
 
-start=$(date +%s)
-if [[ $VIZ -eq 1 ]]; then
-    echo "[TODO]"
-else
-    startup
-fi
-echo Time taken to execute commands is $(($(date +%s) - start )) seconds. # end=$(date +%s)
+startup

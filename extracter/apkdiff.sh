@@ -8,29 +8,19 @@
 
 function HELP() {
 cat <<EOF
-Usage: 
-    $(basename "$0") [options] file
-
-file:
-    apk/dir
-
-options:
-    -v
-    -u --useless            print unused asset directory file in code directly 
+Usage: $(basename "$0") [options] oldapk newapk
 EOF
 }
 
-
 [ -e _TEMPFILE ] && rm _TEMPFILE
 touch _TEMPFILE
+
+[[ ! -f $1 ]] && HELP && exit 2
+[[ ! -f $2 ]] && HELP && exit 2
 zipinfo -l $1 >> _TEMPFILE
 zipinfo -l $2 >> _TEMPFILE
 
 awk '
-    BEGIN {
-        print ARGV[2]
-    }
-
     $0 ~ /Archive:/ {
         if(archive == "old") archive = "new"
         else archive = "old"
@@ -45,19 +35,20 @@ awk '
     archive ~ "new" && NF == 10 {
         file = $10
         size = $4
-        if(!old[file]) add[file] = size
-        else {
-            modify[file] = size - old[file]
+        if(file in old) {
+            if(size != old[file]) modify[file] = size - old[file]
             delete old[file]
+        } else {
+            add[file] = size
         }
     }
 
     END {
-        for(file in old) 
-            printf("")
-        print file
-        printf("add: %s, delete: %s, modify: %s\n", length(old), length(add), length(modify))
+        for(item in add) print "\033[32m [A]", item, add[item]
+        for(item in old) print "\033[31m [D]", item, old[item]
+        for(item in modify) printf "\033[33m [M] %s %s\n", item, modify[item]
+        printf("\033[32m add: %s, \033[31m delete: %s, \033[33m modify: %s\n", length(add), length(old), length(modify))
     }
-' _TEMPFILE $aaa
+' _TEMPFILE
 
 rm _TEMPFILE

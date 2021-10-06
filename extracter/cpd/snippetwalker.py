@@ -13,7 +13,7 @@ class SnippetWaler:
                 for snippet in _snippets:
                     print(snippet.method.clazz.file)
                 print("with tokens number:", str(snippettokenlen))
-                print(_snippets[0].tokenstr())
+                # print(_snippets[0].tokenstr())
                 print()
             pass
     pass

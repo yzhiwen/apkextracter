@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function apkdecode() {
+    [ -z $1 ] && return 2
+
+    input=`realpath $1`
+    output="__`basename $input`"
+    EXTRACT_FILE=$input
+    if [ -d $input ]; then
+        EXTRACT_DIR=$input
+    elif [ -d $output ]; then
+        EXTRACT_DIR=$output
+    else
+        bin/apk/apktool d -o $output $input
+        [ $? == 0 ] && EXTRACT_DIR=$output
+    fi
+}
