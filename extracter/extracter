@@ -10,7 +10,6 @@ options:
     apkdiff                print diff two apk file
     cpd                    print apk copy instruction
     confusion              print apk confusion info
-
 EOF
 }
 
@@ -31,12 +30,13 @@ case $1 in
         . apkdiff.sh $@ ;;
     cpd)
         shift && [ $# == 0 ] && warn "missing apk ..."
-        . common && apkdecode $1
+        . common && apkdecode ${!#}
         [ ! -d $EXTRACT_DIR ] && warn "decode error ..."
-        python3 cpd.py $@ $EXTRACT_DIR
+        python3 cpd.py $@
         ;;
     confusion)
-        
+        shift
+        . confusion.sh $@
         ;;
     *)
         HELP ;;
