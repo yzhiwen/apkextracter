@@ -1,8 +1,9 @@
 #!/bin/bash
 
 function startup() {
-    find $EXTRACT_DIR -iname '*.smali' ! -iname 'R.smali' ! -iname 'R$*.smali' | \
-        xargs -l awk '
+    find $EXTRACT_DIR -iname '*.smali' |
+      xargs grep -l ".class [a-zA-Z ]* $APK_PACKAGE_REF[a-zA-Z0-9_/]*;" | 
+       xargs -l awk '
             BEGIN {
                 fCount = 0; # field字段数量
                 fPrivateCount = 0; # private field字段数量
@@ -13,11 +14,21 @@ function startup() {
             }
 
             END {
-                printf("%s,%s,%s,%s,%s,%s,%s\n",fRawPrivateCount, fPrivateCount, fCount, mRawPrivateCount, mPrivateCount, mCount, clazz)
+                if(exited) { } 
+                else {
+                    if(length(clazz) > 0) {
+                        printf("%s,%s,%s,%s,%s,%s,%s\n",fRawPrivateCount, fPrivateCount, fCount, mRawPrivateCount, mPrivateCount, mCount, clazz)
+                    }
+                }
             }
 
             ### 包含interface `.class public interface`
-            $1 ~ /\.class/ { clazz = $NF }
+            $1 ~ /\.class/ { 
+                clazz = $NF
+                if(length(clazz) == 0) {
+                    exit (exited = 1)
+                }
+            }
 
             ### parse `.field private static final STATE_IDLE:I;`
             $1 ~ /\.field/ && $NF ~ /.*:.*/ { parseField($NF) }
@@ -69,18 +80,28 @@ Usage:
     $(basename "$0") [options] apk
 
 options:
-    --viz            print viz 
+    -v --viz                    confusion scan result visualization 
+    -p --package [package]      specify the scan package name, '.' is all (default: apkpackage name)
 EOF
 }
 
-options=$(getopt -u -o h -l viz,help -- $@)
+options=$(getopt -u -o vph -l viz,package,help -- $@)
 [ $? != 0 ] && echo "getopt error ..." && exit 2
 set -- $options
 
 while true; do
     case $1 in
-        --viz)
+        -v|--viz)
             VIZ=1;;
+        -p|--package)
+            shift
+            [ -z $2 ] && echo "need package name" && exit 2
+            if [ $2 == "." ]; then
+                APK_PACKAGE_REF=$2
+            else
+                APK_PACKAGE_REF=L$(echo $2 | sed "s/\./\//g") # La/b/c
+            fi
+            ;;
         -h|--help)
             HELP && exit 0;;
         *)
@@ -88,10 +109,20 @@ while true; do
     esac
     shift
 done
-
 shift && [ $# == 0 ] && echo "missing file..." && exit 2
+
 . common && apkdecode $1
 [ $? != 0 ] && HELP && exit 2
 [ ! -d $EXTRACT_DIR ] &&  HELP && exit 2
+[ -z $APK_PACKAGE_REF ] && apkpackageref $1
 
-startup
+start=$(date +%s)
+if [ $VIZ == 1 ]; then
+    startup > laboratory/viz/dist/staticfile
+    echo Time taken to execute commands is $(($(date +%s) - start )) seconds. # end=$(date +%s)
+    cd laboratory/viz && sh startup
+    cd ../..
+else
+    startup
+    echo Time taken to execute commands is $(($(date +%s) - start )) seconds. # end=$(date +%s)
+fi

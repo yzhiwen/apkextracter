@@ -2,7 +2,7 @@ import { parse } from "./confusion/parser.js"
 import ConfusionBar from "./confusion/confusion.js"
 import ConfusionTable from "./confusion/table.js"
 
-parse("static/_douyin", onDataReady);
+parse("dist/staticfile", onDataReady);
 
 let table = new ConfusionTable();
 let bar = new ConfusionBar();
