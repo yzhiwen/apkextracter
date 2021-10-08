@@ -35,9 +35,7 @@ case $1 in
         python3 cpd.py $@
         ;;
     confusion)
-        shift
-        . confusion.sh $@
-        ;;
+        shift && . confusion.sh $@ ;;
     *)
         HELP ;;
 esac
