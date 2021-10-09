@@ -5,11 +5,10 @@ cat <<EOF
 Usage: $(basename "$0") [options] apk
 
 options:
-    assetless              print unused asset file in apk directly
-    rless                  print unused resource id in apk directly (need appt2 command)
-    apkdiff                print diff two apk file
     cpd                    print apk copy instruction
     confusion              print apk confusion info
+    apkdiff                print diff two apk file
+    assetless              print unused asset file in apk directly
 EOF
 }
 
@@ -32,7 +31,22 @@ case $1 in
         shift && [ $# == 0 ] && warn "missing apk ..."
         . common && apkdecode ${!#}
         [ ! -d $EXTRACT_DIR ] && warn "decode error ..."
-        python3 cpd.py $@
+        i=0
+        for var in $@; do
+            [[ $var = "-p" || $var = "--package" ]] && packagei="true"
+            array[$i]=$var
+            ((i++))
+        done
+        if [ -z $packagei ]; then
+            apkpackageref $EXTRACT_DIR
+            array[`expr $i - 1`]="-p"
+            array[`expr $i`]=$APK_PACKAGE_REF
+            array[`expr $i + 1`]=$EXTRACT_DIR
+        else
+            array[`expr $i - 1`]=$EXTRACT_DIR
+        fi
+        # echo ${array[@]}
+        python3 cpd.py ${array[@]}
         ;;
     confusion)
         shift && . confusion.sh $@ ;;

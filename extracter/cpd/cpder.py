@@ -5,9 +5,9 @@ from .snippetwalker import SnippetWaler
 from .factory import ClazzFactory, ClazzMethodFactory
 
 class Cpder:
-    def startup(self, path, minitokens=100):
+    def startup(self, path, packageref, minitokens=100):
         start = time.time()
-        ler = SmalierWalker()
+        ler = SmalierWalker(packageref)
         ler.startup(path)
         smalierWalkerTime = time.time() - start
 

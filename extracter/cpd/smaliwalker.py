@@ -4,6 +4,9 @@ from .smaliopcodefactory import OpcodeFactory
 
 class SmalierWalker:
 
+    def __init__(self, packageref = "") -> None:
+        self.packageref = packageref
+
     def startup(self, path):
         smalifiles = self.walkFileTree(path)
         for smalifile in smalifiles:
@@ -19,6 +22,10 @@ class SmalierWalker:
         methods = {}
         with open(smalifile) as file:
             for line in file:
+                if len(self.packageref) > 0 and line.startswith(".class"):
+                    if self.packageref not in line:
+                        return {}
+
                 if line.startswith(".method"):
                     if self.methodfilter(line):
                         while not line.startswith(".end method"):
