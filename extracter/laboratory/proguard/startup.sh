@@ -24,7 +24,7 @@ find . -name '*.class' |
 
 echo ""
 echo "exec proguard injar >>> outjar ..."
-../../bin/proguard/bin/proguard.sh \
+./proguard-7.1.1/bin/proguard.sh \
     -libraryjars $RT_JAR \
     -include $PROGUARD_FILE \
     -injars build/classes.jar \
