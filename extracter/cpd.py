@@ -20,7 +20,8 @@ if __name__ == "__main__":
     if len(args) > 0:
         file = args[0]
         Cpder().startup(file, packageref(options.package), options.minitokens)
-
+    else:
+        parser.print_help()
 
 """
 `some case`

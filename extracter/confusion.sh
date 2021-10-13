@@ -79,7 +79,7 @@ cat <<EOF
 Usage: 
     $(basename "$0") [options] apk
 
-options:
+Options:
     -v --viz                    confusion scan result visualization 
     -p --package [package]      specify the scan package name, '.' is all (default: apkpackage name)
 EOF

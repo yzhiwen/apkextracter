@@ -4,11 +4,22 @@ function HELP() {
 cat <<EOF
 Usage: $(basename "$0") [options] apk
 
-options:
-    cpd                    print apk copy instruction
-    confusion              print apk confusion info
-    apkdiff                print diff two apk file
-    assetless              print unused asset file in apk directly
+Options:
+    cpd                         print apk copy instruction
+    confusion                   print apk confusion info
+    apkdiff [oldapk] [newapk]   print diff two apk file，oldapk newapk
+    assetless                   print unused asset file in apk directly
+
+cpd options:
+    -h, --help                  show this help message and exit
+    -t MINITOKENS, --minitokens=MINITOKENS
+                                the lowest tokens, default: 100
+    -p PACKAGE, --package=PACKAGE
+                                specify the scan package name, default: all
+
+confusion options:
+    -v --viz                    confusion scan result visualization 
+    -p --package [package]      specify the scan package name, '.' is all (default: apkpackage name)
 EOF
 }
 
@@ -28,7 +39,7 @@ case $1 in
         shift && [ $# -lt 2 ] && warn "need two apk ..."
         . apkdiff.sh $@ ;;
     cpd)
-        shift && [ $# == 0 ] && warn "missing apk ..."
+        shift && [ $# == 0 ] && python3 cpd.py && warn ""
         . common && apkdecode ${!#}
         [ ! -d $EXTRACT_DIR ] && warn "decode error ..."
         i=0
