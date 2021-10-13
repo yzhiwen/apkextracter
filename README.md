@@ -2,10 +2,10 @@
 项目简介：基于apk文件的包体积优化分析工具，用于分析apk应用包的体积优化空间
 
 主要功能：
-cpd：基于apk的重复代码检测，用于应用包重复代码分析，
-confusion：识别应用代码中未混淆的私有字段和方法名，支持检测结果图表化展示
-assertless：打印应用中未被直接使用的assets文件
-appdiff：apk文件对比，打印出新增，删除，修改的文件和文件大小
+- cpd：基于apk的重复代码检测，用于应用包重复代码分析，
+- confusion：识别应用代码中未混淆的私有字段和方法名，支持检测结果图表化展示
+- assertless：打印应用中未被直接使用的assets文件
+- appdiff：apk文件对比，打印出新增，删除，修改的文件和文件大小
 
 # 环境搭建
 `git clone https://github.com/yzhiwen/apkextracter && cd apkextracter/extracter && ./extracter`
