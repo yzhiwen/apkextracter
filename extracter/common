@@ -1,0 +1,23 @@
+#!/bin/bash
+
+function apkdecode() {
+    [ -z $1 ] && return 2
+
+    input=`realpath $1`
+    output="__`basename $input`"
+    EXTRACT_FILE=$input
+    if [ -d $input ]; then
+        EXTRACT_DIR=$input
+    elif [ -d $output ]; then
+        EXTRACT_DIR=$output
+    else
+        bin/apk/apktool d -o $output $input
+        [ $? == 0 ] && EXTRACT_DIR=$output
+    fi
+}
+
+function apkpackageref() {
+    [ -z $1 ] && return 2
+    APK_PACKAGE=$(grep -o "package=\"[a-zA-Z.]*\"" $1/AndroidManifest.xml | cut -d '"' -f 2) # a.b.c
+    APK_PACKAGE_REF=L$(echo $APK_PACKAGE | sed "s/\./\//g") # La/b/c
+}

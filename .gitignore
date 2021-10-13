@@ -1,0 +1,13 @@
+_/
+__*/
+out/
+build/
+
+r8/
+dex2jar/
+
+extracter/laboratory/viz/dist
+extracter/laboratory/viz/.cache
+extracter/laboratory/graphics
+extracter/laboratory/pmd
+extracter/laboratory/smali
