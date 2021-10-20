@@ -27,11 +27,11 @@ cpd options:
     -t MINITOKENS, --minitokens=MINITOKENS
                                 the lowest tokens, default: 100
     -p PACKAGE, --package=PACKAGE
-                                specify the scan package name, default: all
+                                specify the scan package name, '.' is all (default: application package name)
 
 confusion options:
     -v --viz                    confusion scan result visualization 
-    -p --package [package]      specify the scan package name, '.' is all (default: apkpackage name)
+    -p --package [package]      specify the scan package name, '.' is all (default: application package name)
 ```
 
 # 检测结果输出

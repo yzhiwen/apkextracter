@@ -4,6 +4,7 @@ from cpd.cpder import Cpder
 def packageref(package):
     if package is None: return "";
     if package == "": return "";
+    if package == ".": return "";
     if "." in package: return package.replace(".", "/")
     return package
 
@@ -14,7 +15,7 @@ if __name__ == "__main__":
         help="the lowest tokens, default: 100", type="int")
 
     parser.add_option("-p", "--package", dest="package", default="",
-        help="specify the scan package name, default: all", type="str")
+        help="specify the scan package name, '.' is all (default: application package name)", type="str")
 
     (options, args) = parser.parse_args()
     if len(args) > 0:
