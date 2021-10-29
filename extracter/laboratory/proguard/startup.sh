@@ -1,6 +1,8 @@
 # some proguard confusion sample. 
 # https://www.guardsquare.com/manual/configuration/usage
 
+[ ! -e "proguard-7.1.1" ] && unzip proguard-7.1.1.zip
+
 RT_JAR=$JAVA_HOME/jre/lib/rt.jar
 PROGUARD_FILE="lab.pro"
 
@@ -12,13 +14,13 @@ rm -rf build
 mkdir build
 
 echo "exec *.java >>> *.class ..."
-find . -name '*.java' |
+find com/ -name '*.java' |
     xargs -t javac # -d build/classes
 [ $? != 0 ] && echo "exit ..." && exit 2
 
 echo ""
 echo "exec *.class >>> *.jar ..."
-find . -name '*.class' |
+find com/ -name '*.class' |
     xargs -t jar cvf build/classes.jar
 [ $? != 0 ] && echo "exit ..." && exit 2
 
